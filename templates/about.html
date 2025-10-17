@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% set active_page = "about" %}
+
+{% block title %}About the Data{% endblock %}
+
+{% block heading %}About the Music Data{% endblock %}
+
+{% block body %}
+    <p>The data used in this web app is from the CORGIS Dataset Project and can be found 
+    <a href="https://corgis-edu.github.io/corgis/json/music/">here</a>.  The data contain statistics about music, the artists, 
+    its attributes (tempo, key, mode, etc.), and popularity ("hotttnesss").
+    </p>
+    <p>
+    The data include songs from approximately 1978 to 2008. 
+    Many entries are missing or incomplete. Some songs have no year listed, 
+    and many titles or release names are missing or appear as the number 0. 
+    </p>
+    <p>
+    Each song, the dataset includes a lot of different measures that describe the musical characteristics and confidence levels in the data. 
+    For example, confidence values such as key_confidence or mode_confidence represent how certain the analysis system 
+    is about its predictions for musical key or mode. The mode value identifies whether the song is in a major or minor scale, 
+    which can influence the mood the song sounds. Latitude and longitude values correspond to the artist’s home location, 
+    showing where the artist or group is based rather than where the song was recorded but even these values may sometimes be equal to 0.
+    </p>
+    
+    
+{% endblock %}
