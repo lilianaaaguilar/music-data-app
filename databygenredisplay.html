@@ -1,0 +1,13 @@
+{% extends "databygenre.html" %}
+
+{% block body %}
+{{ super() }}
+
+<h2>{{ genre }}</h2>
+<h3>Some artists you may be familiar with in {{ genre }} are...</h3>
+<ul>
+    <li>{{ artist1 }}</li>
+    <li>{{ artist2 }}</li>
+    <li>{{ artist3 }}</li>
+</ul>
+{% endblock %}

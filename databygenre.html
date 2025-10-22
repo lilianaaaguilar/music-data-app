@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% set active_page = "databygenre" %}
+
+{% block title %}Data by Genre{% endblock %}
+
+{% block heading %}Data by Genre{% endblock %}
+
+{% block body %}
+<h2>Select a genre</h2>
+<form action="/databygenre">
+  <select name="genre">
+    {{ options }}
+  </select>
+  <br><br>
+  <input type="submit">
+</form>
+{% endblock %}
