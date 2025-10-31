@@ -1,5 +1,5 @@
-from flask import Flask
-
+from flask import Flask, render_template, request
+from markupsafe import Markup
 import json
 
 app = Flask(__name__)
@@ -10,3 +10,58 @@ def render_about():
     
 @app.route('/databygenre')
 def render_databygenre():
+    with open('music.json') as music_data:
+        songs = json.load(music_data)
+    
+    genre = request.args.get('genre')
+    options = get_genre_options(songs)
+    
+    if genre:
+        top_artists = get_top_artists(genre, songs)
+        return render_template('databygenredisplay.html', 
+                             genre=genre,
+                             artist1=top_artists[0] if len(top_artists) > 0 else "N/A",
+                             artist2=top_artists[1] if len(top_artists) > 1 else "N/A",
+                             artist3=top_artists[2] if len(top_artists) > 2 else "N/A",
+                             options=options)
+    else:
+        return render_template('databygenre.html', options=options)
+
+def get_genre_options(songs):
+    """Get all genres with frequency >= 1.0"""
+    genres = []
+    for song in songs:
+        if "artist" in song and song["artist"]:
+        	if "terms" in song["artist"] and "terms_freq" in song["artist"]:
+        		terms = song["artist"]["terms"]
+        		freq = song["artist"]["terms_freq"]
+        		if terms != 0 and freq >= 1.0:
+        			genre_name = terms
+        			if genre_name not in genres:
+        				genres.append(genre_name)
+    options = ""
+    for genre in sorted(genres):
+        options += Markup(f'<option value="{genre}">{genre}</option>')
+    return options
+    
+def get_familiarity(artist_info):
+    """Helper function to get the familiarity score from an artist info"""
+    return artist_info[1]
+
+def get_top_artists(genre, songs):
+    """Get top 3 artists by familiarity for a given genre"""
+    artist_scores = {}
+    for song in songs:
+        if "artist" in song and song["artist"]:
+            art = song["artist"]
+            if "terms" in art and "terms_freq" in art and "familiarity" in art:
+                if art["terms"] == genre:
+                    artist_name = art["name"]
+                    familiarity = art["familiarity"]
+                    if artist_name not in artist_scores or familiarity > artist_scores[artist_name]:
+                        artist_scores[artist_name] = familiarity
+    sorted_artists = sorted(artist_scores.items(), key=get_familiarity, reverse=True)
+    return [f"{artist}" for artist, score in sorted_artists[:3]]
+	
+if __name__=="__main__":
+    app.run(debug=True)

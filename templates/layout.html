@@ -4,38 +4,42 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	
-	<link  rel="stylesheet" href="{{url_for('static',filename='style.css')}}" type="text/css">
+	<link rel="stylesheet" href="{{url_for('static',filename='style.css')}}" type="text/css">
     
     <title>Music Data - {% block title %}{% endblock %}</title>
   </head>
   <body>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <a class="navbar-brand" href=".">Music Data</a>
-        </div>
-        <ul class="nav navbar-nav">
-          
-		  <li {% if active_page == "about" %} class="active"{% endif %}><a href=".">About the Data</a></li>
-          
-		  <li {% if active_page == "databygenre" %} class="active"{% endif %}><a href="databygenre">Data by Genre</a></li>
-          
-		  <li {% if active_page == "tempovsyears" %} class="active"{% endif %}><a href="tempovsyears">Tempo V.S. Years</a></li>
-        </ul>
-      </div>
-    </nav>
-    
-    <div id="content">
-      <h1>{% block heading %}{% endblock %}</h1>
-      {% block body %}{% endblock %}
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('render_about') }}">Music Data</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link {% if active_page == 'about' %}active{% endif %}" href="{{ url_for('render_about') }}">About the Data</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active_page == 'databygenre' %}active{% endif %}" href="{{ url_for('render_databygenre') }}">Data by Genre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if active_page == 'tempovsyears' %}active{% endif %}" href="#">Tempo vs Years</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+	<div id="content">
+    	<h1>{% block heading %}{% endblock %}</h1>
+    	{% block body %}{% endblock %}
     </div>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   
   </body>
 </html>
