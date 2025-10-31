@@ -28,7 +28,7 @@
           <a class="nav-link {% if active_page == 'databygenre' %}active{% endif %}" href="{{ url_for('render_databygenre') }}">Data by Genre</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if active_page == 'tempovsyears' %}active{% endif %}" href="#">Tempo vs Years</a>
+          <a class="nav-link {% if active_page == 'tempovsyears' %}active{% endif %}" href="{{ url_for('render_tempovsyears') }}">Tempo vs Years</a>
         </li>
       </ul>
     </div>

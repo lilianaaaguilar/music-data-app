@@ -14,3 +14,22 @@
 #content h1 {
     margin-bottom: 20px;
 }
+body {
+    padding: 20px;
+    margin: 0;
+}
+
+#content {
+    padding: 20px 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+canvas {
+    display: block;
+    margin: 20px auto;
+}
+
+.navbar {
+    margin-bottom: 20px;
+}

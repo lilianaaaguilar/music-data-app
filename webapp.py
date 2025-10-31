@@ -26,6 +26,14 @@ def render_databygenre():
                              options=options)
     else:
         return render_template('databygenre.html', options=options)
+        
+@app.route('/tempovsyears')
+def render_tempovsyears():
+    with open('music.json') as music_data:
+        songs = json.load(music_data)
+    dataPoints = total_annual_tempos(songs)
+    return render_template('tempovsyears.html', dataPoints=dataPoints)
+
 
 def get_genre_options(songs):
     """Get all genres with frequency >= 1.0"""
@@ -62,6 +70,24 @@ def get_top_artists(genre, songs):
                         artist_scores[artist_name] = familiarity
     sorted_artists = sorted(artist_scores.items(), key=get_familiarity, reverse=True)
     return [f"{artist}" for artist, score in sorted_artists[:3]]
+    
+def total_annual_tempos(songs):
+    """Returns a list of dictionaries {x: year, y: avg_tempo}"""
+    year_tempo = {}
+    for song in songs:
+        if "song" in song and "year" in song["song"] and "tempo" in song["song"]:
+            year = song["song"]["year"]
+            tempo = song["song"]["tempo"]
+            if year > 0 and tempo > 0:
+                if year in year_tempo:
+                    year_tempo[year].append(tempo)
+                else:
+                    year_tempo[year] = [tempo]
+    dataPoints = []
+    for year in sorted(year_tempo):
+        avg_tempo = sum(year_tempo[year]) / len(year_tempo[year])
+        dataPoints.append({"x": year, "y": round(avg_tempo, 2)})
+    return dataPoints
 	
 if __name__=="__main__":
     app.run(debug=True)

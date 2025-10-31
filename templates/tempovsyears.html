@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% set active_page = "tempovsyears" %}
+
+{% block title %}Tempo VS Years{% endblock %}
+
+{% block heading %}Average Tempos of songs vs Years{% endblock %}
+
+{% block body %}
+    
+     <script src="{{url_for('static',filename='canvasChart.js')}}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var dataDef = { 
+                title: "Average Song Tempo by Year",
+                xLabel: 'Year', 
+                yLabel: 'Average Tempo (BPM)',
+                labelFont: '19pt Arial', 
+                dataPointFont: '10pt Arial',
+                renderTypes: [CanvasChart.renderType.lines, CanvasChart.renderType.points],
+                dataPoints: {{ dataPoints | safe}}
+            };
+            CanvasChart.render('canvas', dataDef);
+        });
+    </script>
+    <canvas id="canvas" width="1000" height="600"></canvas>
+    
+{% endblock %}
