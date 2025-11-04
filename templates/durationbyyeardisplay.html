@@ -1,0 +1,10 @@
+{% extends "durationbyyear.html" %}
+{% block body %}
+{{ super() }}
+<h2>{{ years }}</h2>
+<h3>The longest and shortest song durations from {{ years }}:</h3>
+<ul>
+    <li>Longest song: {{ longest }}</li>
+    <li>Shortest song: {{ shortest }}</li>
+</ul>
+{% endblock %}

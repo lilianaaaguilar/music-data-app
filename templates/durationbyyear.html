@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% set active_page = "durationbyyear" %}
+
+{% block title %}Duration by Year{% endblock %}
+
+{% block heading %}Duration by Year{% endblock %}
+
+{% block body %}
+<h2>Select a year</h2>
+<form action="/durationbyyear">
+  <select name="duration">
+    {{ years }}
+  </select>
+  <br><br>
+  <input type="submit">
+</form>
+{% endblock %}

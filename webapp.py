@@ -4,14 +4,16 @@ import json
 
 app = Flask(__name__)
 
+with open('music.json') as f:
+    SONGS = json.load(f)
+
 @app.route('/')
 def render_about():
     return render_template('about.html')
     
 @app.route('/databygenre')
 def render_databygenre():
-    with open('music.json') as music_data:
-        songs = json.load(music_data)
+    songs = SONGS
     
     genre = request.args.get('genre')
     options = get_genre_options(songs)
@@ -27,10 +29,14 @@ def render_databygenre():
     else:
         return render_template('databygenre.html', options=options)
         
+@app.route('/durationbyyear')
+def render_databygenre():
+    return render_template('databygenre.html')
+        
+        
 @app.route('/tempovsyears')
 def render_tempovsyears():
-    with open('music.json') as music_data:
-        songs = json.load(music_data)
+    songs = SONGS
     dataPoints = total_annual_tempos(songs)
     return render_template('tempovsyears.html', dataPoints=dataPoints)
 
@@ -51,10 +57,6 @@ def get_genre_options(songs):
     for genre in sorted(genres):
         options += Markup(f'<option value="{genre}">{genre}</option>')
     return options
-    
-def get_familiarity(artist_info):
-    """Helper function to get the familiarity score from an artist info"""
-    return artist_info[1]
 
 def get_top_artists(genre, songs):
     """Get top 3 artists by familiarity for a given genre"""
@@ -68,8 +70,8 @@ def get_top_artists(genre, songs):
                     familiarity = art["familiarity"]
                     if artist_name not in artist_scores or familiarity > artist_scores[artist_name]:
                         artist_scores[artist_name] = familiarity
-    sorted_artists = sorted(artist_scores.items(), key=get_familiarity, reverse=True)
-    return [f"{artist}" for artist, score in sorted_artists[:3]]
+    sorted_artists = sorted(artist_scores.items(), key=lambda x: x[1], reverse=True)
+    return [artist for artist, _ in sorted_artists[:3]]
     
 def total_annual_tempos(songs):
     """Returns a list of dictionaries {x: year, y: avg_tempo}"""

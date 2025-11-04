@@ -1,6 +1,8 @@
 /*
  adapted from code at https://weblogs.asp.net/dwahlin/creating-a-line-chart-using-the-html-5-canvas
  */
+ /* had used Perplexity and trial and error to help format the graph and figure out how to make the axis look good */
+
 var CanvasChart = function () {
     var ctx;
     var margin = { top: 60, left: 120, right: 0, bottom: 75 };
