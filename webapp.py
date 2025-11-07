@@ -30,9 +30,21 @@ def render_databygenre():
         return render_template('databygenre.html', options=options)
         
 @app.route('/durationbyyear')
-def render_databygenre():
-    return render_template('databygenre.html')
-        
+def render_durationbyyear():
+    year_options = get_year_options(SONGS)
+    year = request.args.get('year')
+
+    if year:
+        year = int(year)
+        longest, shortest = get_duration_stats_by_year(year, SONGS)
+        if longest and shortest:
+            return render_template(
+                'durationbyyeardisplay.html',
+                year_options=year_options,
+                year=year,
+                longest=longest,
+                shortest=shortest)
+    return render_template('durationbyyear.html', year_options=year_options)
         
 @app.route('/tempovsyears')
 def render_tempovsyears():
@@ -73,6 +85,31 @@ def get_top_artists(genre, songs):
     sorted_artists = sorted(artist_scores.items(), key=lambda x: x[1], reverse=True)
     return [artist for artist, _ in sorted_artists[:3]]
     
+def get_year_options(songs):
+    """Get all years for dropdown options"""
+    years = []
+    for song in songs:
+        if "song" in song and "year" in song["song"]:
+            year = song["song"]["year"]
+            if year != 0 and year not in years:
+                years.append(year)
+    yearz = ""
+    for year in sorted(years):
+        yearz += Markup(f'<option value="{year}">{year}</option>')
+    return yearz
+    
+def get_duration_stats_by_year(year, songs):
+    """Return longest and shortest song durations for the selected year"""
+    songs_in_year = [s for s in songs if s["song"]["year"] == year]
+    if not songs_in_year:
+        return None, None
+    durations = [s["song"]["duration"] for s in songs_in_year if "duration" in s["song"]]
+    if not durations:
+        return None, None
+    longest = round(max(durations), 2)
+    shortest = round(min(durations), 2)
+    return longest, shortest
+
 def total_annual_tempos(songs):
     """Returns a list of dictionaries {x: year, y: avg_tempo}"""
     year_tempo = {}

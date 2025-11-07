@@ -9,9 +9,9 @@
 {% block body %}
 <h2>Select a year</h2>
 <form action="/durationbyyear">
-  <select name="duration">
-    {{ years }}
-  </select>
+ <select name="year">
+  {{ year_options }}
+</select>
   <br><br>
   <input type="submit">
 </form>
