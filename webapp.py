@@ -14,9 +14,12 @@ def render_about():
 @app.route('/databygenre')
 def render_databygenre():
     songs = SONGS
-    
     genre = request.args.get('genre')
     options = get_genre_options(songs)
+    
+    if genre:
+        top_artists = get_top_artists(genre, songs)
+        count = get_genre_count(genre, songs)
     
     if genre:
         top_artists = get_top_artists(genre, songs)
@@ -25,7 +28,8 @@ def render_databygenre():
                              artist1=top_artists[0] if len(top_artists) > 0 else "N/A",
                              artist2=top_artists[1] if len(top_artists) > 1 else "N/A",
                              artist3=top_artists[2] if len(top_artists) > 2 else "N/A",
-                             options=options)
+                             options=options,
+                             count=count)
     else:
         return render_template('databygenre.html', options=options)
         
@@ -33,17 +37,23 @@ def render_databygenre():
 def render_durationbyyear():
     year_options = get_year_options(SONGS)
     year = request.args.get('year')
-
     if year:
         year = int(year)
         longest, shortest = get_duration_stats_by_year(year, SONGS)
-        if longest and shortest:
+        count = get_song_count_by_year(year, SONGS)
+        if longest is not None and shortest is not None:
             return render_template(
                 'durationbyyeardisplay.html',
                 year_options=year_options,
                 year=year,
                 longest=longest,
-                shortest=shortest)
+                shortest=shortest,
+                count=count)
+        else:
+            return render_template(
+                'durationbyyear.html',
+                year_options=year_options,
+                message=f"No songs found for {year}.")
     return render_template('durationbyyear.html', year_options=year_options)
         
 @app.route('/tempovsyears')
@@ -109,6 +119,19 @@ def get_duration_stats_by_year(year, songs):
     longest = round(max(durations), 2)
     shortest = round(min(durations), 2)
     return longest, shortest
+    
+def get_genre_count(genre, songs):
+    """Return the number of songs that belong to the selected genre."""
+    genre_songs = [
+        s for s in songs
+        if "artist" in s and s["artist"]
+        and "terms" in s["artist"] and s["artist"]["terms"] == genre]
+    return len(genre_songs)
+    
+def get_song_count_by_year(year, songs):
+    """Return the number of songs for the selected year."""
+    songs_in_year = [s for s in songs if "song" in s and s["song"].get("year") == year]
+    return len(songs_in_year)
 
 def total_annual_tempos(songs):
     """Returns a list of dictionaries {x: year, y: avg_tempo}"""

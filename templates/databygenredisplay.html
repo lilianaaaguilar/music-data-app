@@ -1,11 +1,15 @@
 {% extends "databygenre.html" %}
 {% block body %}
 {{ super() }}
+<br><br>
 <h2>{{ genre }}</h2>
+<br>
 <h3>Top 3 artists by familiarity in {{ genre }}:</h3>
 <ul>
     <li>{{ artist1 }}</li>
     <li>{{ artist2 }}</li>
     <li>{{ artist3 }}</li>
 </ul>
+<br>
+<p>Total songs in "{{ genre }}" in the dataset: {{ count }}</p>
 {% endblock %}
